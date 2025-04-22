@@ -20,7 +20,7 @@ const httpLink = new HttpLink({ uri: `${API_URL}/graphql` });
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: logoutLink.concat(httpLin),
+  link: logoutLink.concat(httpLink),
 });
 
 export default client;
