@@ -2,6 +2,7 @@ import {
   Container,
   createTheme,
   CssBaseline,
+  Grid,
   ThemeProvider,
 } from "@mui/material";
 import { RouterProvider } from "react-router-dom";
@@ -11,6 +12,8 @@ import client from "./constants/apollo-client";
 import Guard from "./components/auth/guard";
 import Header from "./components/header/header";
 import Snackbar from "./components/snackbar/snackbar";
+import ChatList from "./components/chat-list/chatlist";
+import { usePath } from "./hooks/usePath";
 
 const darkTheme = createTheme({
   palette: {
@@ -19,19 +22,37 @@ const darkTheme = createTheme({
 });
 
 const App = () => {
+  const { path } = usePath();
+
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <Header />
-        <Container>
-          <Guard>
-            <RouterProvider router={Router} />
-          </Guard>
-        </Container>
+        <Guard>
+          {path === "/" ? (
+            <Grid container>
+              <Grid size={{ md: 3 }}>
+                <ChatList />
+              </Grid>
+              <Grid size={{ md: 9 }}></Grid>
+              <Routes />
+            </Grid>
+          ) : (
+            <Routes />
+          )}
+        </Guard>
         <Snackbar />
       </ThemeProvider>
     </ApolloProvider>
+  );
+};
+
+const Routes = () => {
+  return (
+    <Container>
+      <RouterProvider router={Router} />
+    </Container>
   );
 };
 

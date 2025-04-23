@@ -3,7 +3,7 @@ import Login from "./auth/login";
 import Signup from "./auth/signup";
 import Home from "./home/home";
 
-const Router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
@@ -18,4 +18,4 @@ const Router = createBrowserRouter([
   },
 ]);
 
-export default Router;
+export default router;
