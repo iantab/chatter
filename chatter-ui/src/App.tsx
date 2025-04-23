@@ -35,8 +35,9 @@ const App = () => {
               <Grid size={{ md: 3 }}>
                 <ChatList />
               </Grid>
-              <Grid size={{ md: 9 }}></Grid>
-              <Routes />
+              <Grid size={{ md: 9 }}>
+                <Routes />
+              </Grid>
             </Grid>
           ) : (
             <Routes />
