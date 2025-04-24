@@ -1,1 +1,1 @@
-WIP web chatting application in typescript with react and nestjs 
+Web chatting application in TypeScript made with ReactJS and NestJS
