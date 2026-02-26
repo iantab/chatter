@@ -1,0 +1,8 @@
+# Prettier ignores
+
+node_modules/
+dist/
+build/
+coverage/
+.idea/
+.env

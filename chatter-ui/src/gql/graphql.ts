@@ -19,7 +19,7 @@ export type MakeEmpty<T extends {
 }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> =
   T
-  | { [P in keyof T]?: P extends ' " $fragmentName" '_"__typename" T[P] : never };
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }

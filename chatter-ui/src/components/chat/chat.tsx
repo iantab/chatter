@@ -7,6 +7,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { useCreateMessage } from "../../hooks/useCreateMessage";
 import { useEffect, useRef, useState } from "react";
 import { useGetMessages } from "../../hooks/useGetMessages";
+import { messageAddedDocument } from "../../hooks/useMessageAdded";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 
@@ -16,7 +17,7 @@ const Chat = () => {
   const chatId = params._id!;
   const { data } = useGetChat({ _id: chatId });
   const [createMessage] = useCreateMessage(chatId);
-  const { data: messages } = useGetMessages({ chatId });
+  const { data: messages, subscribeToMore } = useGetMessages({ chatId });
   const divRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
 
@@ -26,6 +27,27 @@ const Chat = () => {
     setMessage("");
     scrollToBottom();
   }, [location, messages]);
+
+  useEffect(() => {
+    let unsubscribe: () => void;
+    if (chatId) {
+      unsubscribe = subscribeToMore({
+        document: messageAddedDocument as any,
+        variables: { chatId },
+        updateQuery: (prev: any, { subscriptionData }: any) => {
+          if (!subscriptionData.data) return prev;
+          const newMessage = (subscriptionData.data as any).messageAdded;
+          if (prev.messages.some((m: any) => m._id === newMessage._id)) return prev;
+          return Object.assign({}, prev, {
+            messages: [...prev.messages, newMessage],
+          });
+        },
+      });
+    }
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [chatId, subscribeToMore]);
 
   const handleCreateMessage = async () => {
     await createMessage({
@@ -44,7 +66,7 @@ const Chat = () => {
     <Stack sx={{ height: "100%", justifyContent: "space-between" }}>
       <h1>{data?.chat.name}</h1>
       <Box sx={{ maxHeight: "70vh", overflow: "auto" }}>
-        {messages?.messages.map((message) => (
+        {messages?.messages.map((message: any) => (
           <Grid container alignItems="center" marginBottom="1rem">
             <Grid size={1}>
               <Avatar src="" sx={{ width: 52, height: 52 }} />
